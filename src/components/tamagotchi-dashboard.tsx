@@ -104,6 +104,11 @@ const TamagotchiDashboard = () => {
             <div className="text-center mb-4 text-lg font-medium">
               Edad: {Math.floor(age / 20)} días
             </div>
+
+            {/* Imagen beasts centrada */}
+            <div className="flex justify-center mb-4">
+              <img src="/conejitobeast13.PNG" alt="Tamagotchi" className="w-32 h-32" />
+            </div>
             
             {/* Barra de Hambre */}
             <div className="flex items-center gap-2 mb-2">
