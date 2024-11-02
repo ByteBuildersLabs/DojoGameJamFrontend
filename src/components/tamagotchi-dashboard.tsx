@@ -79,7 +79,7 @@ const TamagotchiDashboard = () => {
       hunger: Math.min(100, prev.hunger + 30), // Increases hunger but caps at 100
       energy: Math.min(100, prev.energy + 10), // Slightly increases energy, capped at 100
     }));
-    showAnimation('/babybeasteat.gif'); // Replace with the path to your feeding GIF
+    showAnimation('/babybeast_eat.gif'); // Replace with the path to your feeding GIF
   };
 
   // Function to let the Tamagotchi sleep
@@ -89,7 +89,7 @@ const TamagotchiDashboard = () => {
       energy: Math.min(100, prev.energy + 40), // Significantly increases energy, capped at 100
       happiness: Math.min(100, prev.happiness + 10), // Increases happiness slightly, capped at 100
     }));
-    showAnimationWithoutTimer('/babybeastsleep-sleep.gif'); // Replace with the path to your sleeping GIF
+    showAnimationWithoutTimer('/babybeast_sleep.gif'); // Replace with the path to your sleeping GIF
   };
 
   // Function to play with the Tamagotchi
@@ -100,7 +100,7 @@ const TamagotchiDashboard = () => {
       energy: Math.max(0, prev.energy - 20), // Decreases energy, with a minimum of 0
       hunger: Math.max(0, prev.hunger - 10), // Increases hunger slightly, minimum of 0
     }));
-    showAnimation('/babybeastplay.gif'); // Replace with the path to your playing GIF
+    showAnimation('/babybeast_play.gif'); // Replace with the path to your playing GIF
   };
 
   // Function to clean the Tamagotchi
@@ -110,7 +110,7 @@ const TamagotchiDashboard = () => {
       hygiene: Math.min(100, prev.hygiene + 40), // Increases hygiene, capped at 100
       happiness: Math.min(100, prev.happiness + 10), // Slightly increases happiness, capped at 100
     }));
-    showAnimation('/babybeastshower.gif'); // Replace with the path to your cleaning GIF
+    showAnimation('/babybeast_shower.gif'); // Replace with the path to your cleaning GIF
   };
 
   const wakeUp = () => {
