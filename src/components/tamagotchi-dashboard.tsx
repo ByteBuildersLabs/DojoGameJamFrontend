@@ -135,47 +135,50 @@ const TamagotchiDashboard = () => {
     <div className="w-full max-w-2xl mx-auto p-4">
       <Card>
         <CardHeader>
-          <CardTitle className="text-center">
-            {isAlive ? 'My BabyBeast' : '☠️ Game Over'}
+          <CardTitle className="text-center text-white">
+              {isAlive ? (
+            <>
+              <span style={{ color: '#e4a101' }}>BABYBEAST</span>: {Math.floor(age / 20)} days
+            </>
+          ) : (
+            '☠️ GAME OVER'
+          )}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            <div className="text-center mb-4 text-lg font-medium">
-              Age: {Math.floor(age / 20)} days
-            </div>
 
             {/* Centered Tamagotchi Image */}
             <div className="flex justify-center mb-4">
-              <img src={currentImage} alt="Tamagotchi" className="w-32 h-32" />
+              <img src={currentImage} alt="Tamagotchi" className="w-40 h-40" />
             </div>
             
             {/* Hunger Bar */}
             <div className="flex items-center gap-2 mb-2">
               <Heart className="text-red-500" />
               <Progress value={stats.hunger} />
-              <span className="w-12 text-right font-medium">{Math.round(stats.hunger)}%</span>
+              <span className="w-12 text-right font-medium text-white">{Math.round(stats.hunger)}%</span>
             </div>
 
             {/* Energy Bar */}
             <div className="flex items-center gap-2 mb-2">
               <Coffee className="text-yellow-600" />
               <Progress value={stats.energy} />
-              <span className="w-12 text-right font-medium">{Math.round(stats.energy)}%</span>
+              <span className="w-12 text-right font-medium text-white">{Math.round(stats.energy)}%</span>
             </div>
 
             {/* Happiness Bar */}
             <div className="flex items-center gap-2 mb-2">
               <Gamepad2 className="text-green-500" />
               <Progress value={stats.happiness} />
-              <span className="w-12 text-right font-medium">{Math.round(stats.happiness)}%</span>
+              <span className="w-12 text-right font-medium text-white">{Math.round(stats.happiness)}%</span>
             </div>
 
             {/* Hygiene Bar */}
             <div className="flex items-center gap-2 mb-2">
               <Bath className="text-blue-500" />
               <Progress value={stats.hygiene} />
-              <span className="w-12 text-right font-medium">{Math.round(stats.hygiene)}%</span>
+              <span className="w-12 text-right font-medium text-white">{Math.round(stats.hygiene)}%</span>
             </div>
 
             {/* Action Buttons */}
