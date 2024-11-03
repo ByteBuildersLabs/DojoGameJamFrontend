@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { Gamepad } from "lucide-react";
+import Background from './ui/Background';
 
 interface PlatformGameProps {
     isOpen: boolean;
@@ -199,7 +200,7 @@ const PlatformGame: React.FC<PlatformGameProps> = ({ isOpen, onClose }) => {
   return (
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent 
-        className="sm:max-w-[700px]" 
+        className="sm:max-w-[800px]" 
         style={{
           borderRadius: "25px",
           borderWidth: "3px",
@@ -216,19 +217,28 @@ const PlatformGame: React.FC<PlatformGameProps> = ({ isOpen, onClose }) => {
           ✖
         </button>
           {showInstructions ? (
-            <div className="text-white p-4 bg-gray-800 rounded-lg">
+            <div className="p-4 rounded-lg" style={{ backgroundColor: "#370001", color: "#ffffff" }}>
               <h2 className="text-xl font-bold mb-2" style={{ color: '#e4a101' }}>Instructions</h2>
               <p>- Use the left (←) and right (→) arrow keys to move horizontally.</p>
               <p>- Press the space bar (or the up arrow ↑) to jump.</p>
               <p>- Try to keep the character on the platforms to avoid falling.</p>
               <p>- As you progress, your score will increase automatically.</p>
               <p>- Avoid falling off the screen to prevent losing the game!</p>
-              <Button onClick={startGame} className="mt-4">
+              <Button 
+                onClick={startGame} 
+                className="mt-4"
+                style={{
+                    backgroundColor: "#e4a101", 
+                    color: "#1b1b1b", 
+                    border: "2px solid #e4a101",
+                    fontWeight: "bold"
+                }}
+                >
                 Start Game
-              </Button>
+            </Button>
             </div>
           ) : (
-            <div className="relative w-[600px] h-[400px] bg-gray-900 overflow-hidden">
+            <div className="relative mx-auto w-[700px] h-[500px] bg-[#1b1b1b] overflow-hidden flex items-center justify-center z-10"> 
               {/* Score */}
               <div className="absolute top-4 right-4 text-white text-xl">
                 Score: {gameState.score}
@@ -257,18 +267,29 @@ const PlatformGame: React.FC<PlatformGameProps> = ({ isOpen, onClose }) => {
                     top: `${platform.y}px`,
                     width: `${platform.width}px`,
                     height: '10px',
+                    backgroundColor: "#e4a101",
                   }}
                 />
               ))}
 
               {/* Game Over Screen */}
-              {gameState.gameOver && (
-                <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center">
-                  <h2 className="text-white text-2xl mb-4">☠️ GAME OVER!</h2>
-                  <p className="text-white mb-4">Score: {gameState.score}</p>
-                  <Button onClick={reset}>Play Again</Button>
-                </div>
-              )}
+            {gameState.gameOver && (
+              <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center">
+                <h2 className="text-white text-2xl mb-4">Game Over!</h2>
+                <p className="text-white mb-4">Score: {gameState.score}</p>
+                <Button 
+                  onClick={reset} 
+                  style={{
+                    backgroundColor: "#e4a101", // Fondo del botón en color #e4a101
+                    color: "#1b1b1b", // Color del texto en el botón
+                    border: "2px solid #e4a101",
+                    fontWeight: "bold" // Texto en negrita
+                  }}
+                >
+                  Play Again
+                </Button>
+              </div>
+            )}
             </div>
           )}
         </DialogContent>
