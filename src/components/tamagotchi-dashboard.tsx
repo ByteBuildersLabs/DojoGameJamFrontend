@@ -2,12 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Progress } from './ui/progress';
 import { Button } from './ui/button';
-import PlatformGame from './mini-game';
-import { Heart, Pizza, Coffee, Bath, Gamepad2, Sun, Gamepad} from 'lucide-react';
-
-interface TamagotchiDashboardProps {
-  openMiniGame: () => void;
-}
+import { Heart, Pizza, Coffee, Bath, Gamepad2, Sun } from 'lucide-react';
 
 interface Stats {
   hunger: number;
@@ -16,7 +11,7 @@ interface Stats {
   hygiene: number;
 }
 
-const TamagotchiDashboard: React.FC<TamagotchiDashboardProps> = ({ openMiniGame }) => {
+const TamagotchiDashboard: React.FC = () => {
   const [stats, setStats] = useState<Stats>({
     hunger: 100,
     energy: 100,
@@ -27,7 +22,6 @@ const TamagotchiDashboard: React.FC<TamagotchiDashboardProps> = ({ openMiniGame 
   const [isAlive, setIsAlive] = useState(true);
   const [age, setAge] = useState(0);
   const [currentImage, setCurrentImage] = useState('/babybeast_happy.gif'); 
-  const [isPlatformGameOpen, setIsPlatformGameOpen] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -47,20 +41,11 @@ const TamagotchiDashboard: React.FC<TamagotchiDashboardProps> = ({ openMiniGame 
   }, [isAlive]); 
   
   useEffect(() => {
-    
     if (Object.values(stats).some(stat => stat === 0)) {
       setIsAlive(false);
       showDeathAnimation();
     }
   }, [stats]);
-
-  const handleOpenPlatformGame = () => {
-    setIsPlatformGameOpen(true);
-  };
-
-  const handleClosePlatformGame = () => {
-    setIsPlatformGameOpen(false); 
-  };
 
   const showAnimationWithoutTimer = (gifPath: string) => {
     setCurrentImage(gifPath);
@@ -243,20 +228,6 @@ const TamagotchiDashboard: React.FC<TamagotchiDashboardProps> = ({ openMiniGame 
               >
                 <Sun className="w-4 h-4" /> Wake Up
               </Button>
-
-              {/* New Button to Open Platform Game */}
-              <Button 
-                onClick={openMiniGame} 
-                className="flex items-center gap-2 bg-[#370001] text-white border-[#e4a101] border-2 hover:bg-[#4a0001]" 
-                disabled={!isAlive}
-                style={{
-                  backgroundColor: "#370001",
-                  borderColor: "#e4a101",
-                  borderWidth: "2px"
-                }}
-              >
-                <Gamepad className="w-4 h-4" /> Mini Game
-              </Button>
             </div>
 
             {/* Restart Button, appears when Tamagotchi is dead */}
@@ -276,15 +247,6 @@ const TamagotchiDashboard: React.FC<TamagotchiDashboardProps> = ({ openMiniGame 
           </div>
         </CardContent>
       </Card>
-  
-      {/* Modal for Platform Game */}
-      {isPlatformGameOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-4 rounded-lg max-w-xl w-full relative">
-            <PlatformGame isOpen={isPlatformGameOpen} onClose={handleClosePlatformGame} />
-          </div>
-        </div>
-      )}
     </div>
   );
 };
