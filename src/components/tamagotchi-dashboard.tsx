@@ -201,28 +201,28 @@ const TamagotchiDashboard: React.FC<TamagotchiDashboardProps> = ({ openMiniGame 
               <Button 
                 onClick={feed} 
                 disabled={!isAlive}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 bg-[#370001] border-[#e4a101] border-2 hover:bg-[#4a0001]"
               >
                 <Pizza className="w-4 h-4" /> Feed
               </Button>
               <Button 
                 onClick={sleep} 
                 disabled={!isAlive}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 bg-[#370001] border-[#e4a101] border-2 hover:bg-[#4a0001]"
               >
                 <Coffee className="w-4 h-4" /> Sleep
               </Button>
               <Button 
                 onClick={play} 
                 disabled={!isAlive}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 bg-[#370001] border-[#e4a101] border-2 hover:bg-[#4a0001]"
               >
                 <Gamepad2 className="w-4 h-4" /> Play
               </Button>
               <Button 
                 onClick={clean} 
                 disabled={!isAlive}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 bg-[#370001] border-[#e4a101] border-2 hover:bg-[#4a0001]"
               >
                 <Bath className="w-4 h-4" /> Clean
               </Button>
@@ -230,13 +230,17 @@ const TamagotchiDashboard: React.FC<TamagotchiDashboardProps> = ({ openMiniGame 
               <Button 
                 onClick={wakeUp} 
                 disabled={!isAlive} 
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 bg-[#370001] border-[#e4a101] border-2 hover:bg-[#4a0001]"
               >
                 <Sun className="w-4 h-4" /> Wake Up
               </Button>
   
               {/* New Button to Open Platform Game */}
-              <Button onClick={openMiniGame} className="flex items-center gap-2" disabled={!isAlive}>
+              <Button 
+                onClick={openMiniGame} 
+                className="flex items-center gap-2 bg-[#370001] border-[#e4a101] border-2 hover:bg-[#4a0001]" 
+                disabled={!isAlive}
+              >
                 <Gamepad className="w-4 h-4" /> Mini Game
               </Button>
             </div>
@@ -245,7 +249,7 @@ const TamagotchiDashboard: React.FC<TamagotchiDashboardProps> = ({ openMiniGame 
             {!isAlive && (
               <Button 
                 onClick={restart}
-                className="w-full mt-4"
+                className="w-full mt-4 bg-[#e4a101] border-[#370001] border-2 hover:bg-[#f5b112] text-[#370001] font-bold"
               >
                 Restart Game
               </Button>
@@ -258,13 +262,12 @@ const TamagotchiDashboard: React.FC<TamagotchiDashboardProps> = ({ openMiniGame 
       {isPlatformGameOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-4 rounded-lg max-w-xl w-full relative">
-            <PlatformGame isOpen={isPlatformGameOpen} onClose={handleClosePlatformGame} /> {/* Pasamos las props necesarias */}
+            <PlatformGame isOpen={isPlatformGameOpen} onClose={handleClosePlatformGame} />
           </div>
         </div>
       )}
     </div>
   );
-  
 };
 
 export default TamagotchiDashboard;
