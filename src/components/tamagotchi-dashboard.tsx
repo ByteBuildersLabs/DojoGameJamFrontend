@@ -1,10 +1,13 @@
+// Main component for the Tamagotchi dashboard
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Progress } from './ui/progress';
-import { Button } from './ui/button';
-import { Heart, Pizza, Coffee, Bath, Gamepad2, Sun } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
+import { Pizza, Coffee, Gamepad2, Bath, Sun, Gamepad } from 'lucide-react';
+import PlatformGame from './mini-game';
 
-// Define the structure of stats with an interface
+interface TamagotchiDashboardProps {
+  openMiniGame: () => void;
+}
+
 interface Stats {
   hunger: number;
   energy: number;
@@ -12,8 +15,7 @@ interface Stats {
   hygiene: number;
 }
 
-// Main component for the Tamagotchi dashboard
-const TamagotchiDashboard = () => {
+const TamagotchiDashboard: React.FC<TamagotchiDashboardProps> = ({ openMiniGame }) => {
   const [stats, setStats] = useState<Stats>({
     hunger: 100,
     energy: 100,
@@ -37,6 +39,7 @@ const TamagotchiDashboard = () => {
         setAge(prevAge => prevAge + 1);
       }
     }, 3000);
+
     return () => clearInterval(interval);
   }, [isAlive]);
 
@@ -46,24 +49,14 @@ const TamagotchiDashboard = () => {
     }
   }, [stats]);
 
-  const showAnimationWithoutTimer = (gifPath: string) => {
-    setCurrentImage(gifPath);
-  };
-
-  const showAnimation = (gifPath: string) => {
-    setCurrentImage(gifPath);
-    setTimeout(() => {
-      setCurrentImage('/babybeast_happy.gif');
-    }, 3000);
-  };
-
   const feed = () => {
     setStats(prev => ({
       ...prev,
       hunger: Math.min(100, prev.hunger + 30),
       energy: Math.min(100, prev.energy + 10),
     }));
-    showAnimation('/babybeast_eat.gif');
+    setCurrentImage('/babybeast_eat.gif');
+    setTimeout(() => setCurrentImage('/babybeast_happy.gif'), 3000);
   };
 
   const sleep = () => {
@@ -72,7 +65,7 @@ const TamagotchiDashboard = () => {
       energy: Math.min(100, prev.energy + 40),
       happiness: Math.min(100, prev.happiness + 10),
     }));
-    showAnimationWithoutTimer('/babybeast_sleep.gif');
+    setCurrentImage('/babybeast_sleep.gif');
   };
 
   const play = () => {
@@ -82,7 +75,8 @@ const TamagotchiDashboard = () => {
       energy: Math.max(0, prev.energy - 20),
       hunger: Math.max(0, prev.hunger - 10),
     }));
-    showAnimation('/babybeast_play.gif');
+    setCurrentImage('/babybeast_play.gif');
+    setTimeout(() => setCurrentImage('/babybeast_happy.gif'), 3000);
   };
 
   const clean = () => {
@@ -91,7 +85,8 @@ const TamagotchiDashboard = () => {
       hygiene: Math.min(100, prev.hygiene + 40),
       happiness: Math.min(100, prev.happiness + 10),
     }));
-    showAnimation('/babybeast_shower.gif');
+    setCurrentImage('/babybeast_shower.gif');
+    setTimeout(() => setCurrentImage('/babybeast_happy.gif'), 3000);
   };
 
   const wakeUp = () => {
@@ -117,7 +112,7 @@ const TamagotchiDashboard = () => {
           <CardTitle className="text-center text-white">
             {isAlive ? (
               <>
-                <span style={{ color: '#e4a101' }}>BABYBEAST</span>: {Math.floor(age / 20)} days
+                <span className="text-[#e4a101]">BABYBEAST</span>: {Math.floor(age / 20)} days
               </>
             ) : (
               '☠️ GAME OVER'
@@ -126,70 +121,62 @@ const TamagotchiDashboard = () => {
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
+            {/* Centered Tamagotchi Image */}
             <div className="flex justify-center mb-4">
               <img src={currentImage} alt="Tamagotchi" className="w-40 h-40" />
             </div>
-
-            {/* Progress bars (no changes) */}
-            <div className="flex items-center gap-2 mb-2">
-              <Heart className="text-red-500" />
-              <Progress value={stats.hunger} />
-              <span className="w-12 text-right font-medium text-white">{Math.round(stats.hunger)}%</span>
-            </div>
-
-            <div className="flex items-center gap-2 mb-2">
-              <Coffee className="text-yellow-600" />
-              <Progress value={stats.energy} />
-              <span className="w-12 text-right font-medium text-white">{Math.round(stats.energy)}%</span>
-            </div>
-
-            <div className="flex items-center gap-2 mb-2">
-              <Gamepad2 className="text-green-500" />
-              <Progress value={stats.happiness} />
-              <span className="w-12 text-right font-medium text-white">{Math.round(stats.happiness)}%</span>
-            </div>
-
-            <div className="flex items-center gap-2 mb-2">
-              <Bath className="text-blue-500" />
-              <Progress value={stats.hygiene} />
-              <span className="w-12 text-right font-medium text-white">{Math.round(stats.hygiene)}%</span>
-            </div>
-
-            {/* Action buttons with enhanced styles */}
+            
+            {/* Action Buttons */}
             <div className="grid grid-cols-2 gap-4 mt-6">
-              {['Feed', 'Sleep', 'Play', 'Clean', 'Wake Up'].map((action, index) => (
-                <Button
-                  key={action}
-                  onClick={() => {
-                    if (action === 'Feed') feed();
-                    else if (action === 'Sleep') sleep();
-                    else if (action === 'Play') play();
-                    else if (action === 'Clean') clean();
-                    else if (action === 'Wake Up') wakeUp();
-                  }}
-                  disabled={!isAlive}
-                  className={`bg-[#370001] border-2 border-[#e4a101] text-white font-semibold 
-                              rounded-full py-3 px-6 hover:bg-[#5a0002] 
-                              focus:outline-none focus:ring-2 focus:ring-[#e4a101] 
-                              disabled:opacity-50 transition-transform transform hover:scale-105`}
-                >
-                  {action === 'Feed' && <Pizza className="w-4 h-4 mr-2" />}
-                  {action === 'Sleep' && <Coffee className="w-4 h-4 mr-2" />}
-                  {action === 'Play' && <Gamepad2 className="w-4 h-4 mr-2" />}
-                  {action === 'Clean' && <Bath className="w-4 h-4 mr-2" />}
-                  {action === 'Wake Up' && <Sun className="w-4 h-4 mr-2" />} 
-                  {action}
-                </Button>
-              ))}
+              <button 
+                onClick={feed} 
+                disabled={!isAlive}
+                className="flex items-center gap-2 bg-[#370001] border border-[#e4a101] text-white hover:bg-[#5b0003] py-2 px-4 rounded"
+              >
+                <Pizza className="w-4 h-4" /> Feed
+              </button>
+              <button 
+                onClick={sleep} 
+                disabled={!isAlive}
+                className="flex items-center gap-2 bg-[#370001] border border-[#e4a101] text-white hover:bg-[#5b0003] py-2 px-4 rounded"
+              >
+                <Coffee className="w-4 h-4" /> Sleep
+              </button>
+              <button 
+                onClick={play} 
+                disabled={!isAlive}
+                className="flex items-center gap-2 bg-[#370001] border border-[#e4a101] text-white hover:bg-[#5b0003] py-2 px-4 rounded"
+              >
+                <Gamepad2 className="w-4 h-4" /> Play
+              </button>
+              <button 
+                onClick={clean} 
+                disabled={!isAlive}
+                className="flex items-center gap-2 bg-[#370001] border border-[#e4a101] text-white hover:bg-[#5b0003] py-2 px-4 rounded"
+              >
+                <Bath className="w-4 h-4" /> Clean
+              </button>
+  
+              <button 
+                onClick={wakeUp} 
+                disabled={!isAlive} 
+                className="flex items-center gap-2 bg-[#370001] border border-[#e4a101] text-white hover:bg-[#5b0003] py-2 px-4 rounded"
+              >
+                <Sun className="w-4 h-4" /> Wake Up
+              </button>
+  
+              <button onClick={openMiniGame} className="flex items-center gap-2 bg-[#370001] border border-[#e4a101] text-white hover:bg-[#5b0003] py-2 px-4 rounded" disabled={!isAlive}>
+                <Gamepad className="w-4 h-4" /> Mini Game
+              </button>
             </div>
-
+  
             {!isAlive && (
-              <Button 
+              <button 
                 onClick={restart}
-                className="w-full mt-4 bg-[#e4a101] border-2 border-[#370001] text-[#370001] py-2 rounded-lg hover:bg-[#e4a101]/90 focus:outline-none focus:ring-2 focus:ring-[#370001] transition"
+                className="w-full mt-4 bg-[#e4a101] border border-[#370001] text-[#370001] hover:bg-[#f5b51a] py-2 px-4 rounded"
               >
                 Restart Game
-              </Button>
+              </button>
             )}
           </div>
         </CardContent>
