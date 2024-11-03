@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent } from "./ui/dialog";
 import { Button } from "./ui/button";
-import { Gamepad } from "lucide-react";
-import Background from './ui/Background';
 
 interface PlatformGameProps {
     isOpen: boolean;
@@ -44,9 +42,7 @@ const PlatformGame: React.FC<PlatformGameProps> = ({ isOpen, onClose }) => {
     playerY: 300,
     velocityY: 0,
     platforms: [
-      // Plataforma inicial más ancha
       { x: 0, y: 350, width: 200 },
-      // Plataformas más cercanas entre sí
       { x: 250, y: 300, width: 100 },
       { x: 400, y: 250, width: 100 },
       { x: 550, y: 300, width: 100 },
@@ -62,11 +58,10 @@ const PlatformGame: React.FC<PlatformGameProps> = ({ isOpen, onClose }) => {
   const GAME_HEIGHT = 400;
   const PLAYER_SIZE = 40;
   
-  // Configuración de generación de plataformas
-  const PLATFORM_MIN_DISTANCE = 120; // Distancia mínima entre plataformas
-  const PLATFORM_MAX_DISTANCE = 180; // Distancia máxima entre plataformas
-  const PLATFORM_MIN_HEIGHT = 200; // Altura mínima de las plataformas
-  const PLATFORM_MAX_HEIGHT = 320; // Altura máxima de las plataformas
+  const PLATFORM_MIN_DISTANCE = 120; 
+  const PLATFORM_MAX_DISTANCE = 180; 
+  const PLATFORM_MIN_HEIGHT = 200; 
+  const PLATFORM_MAX_HEIGHT = 320; 
 
   const reset = () => {
     setGameState({
@@ -74,9 +69,7 @@ const PlatformGame: React.FC<PlatformGameProps> = ({ isOpen, onClose }) => {
       playerY: 300,
       velocityY: 0,
       platforms: [
-        // Plataforma inicial más ancha
         { x: 0, y: 350, width: 200 },
-        // Plataformas más cercanas entre sí
         { x: 250, y: 300, width: 100 },
         { x: 400, y: 250, width: 100 },
         { x: 550, y: 300, width: 100 },
@@ -96,9 +89,7 @@ const PlatformGame: React.FC<PlatformGameProps> = ({ isOpen, onClose }) => {
   }, []);
 
   const generateNewPlatform = (lastPlatformX: number): Platform => {
-    // Calcula una distancia aleatoria dentro del rango definido
     const distance = Math.random() * (PLATFORM_MAX_DISTANCE - PLATFORM_MIN_DISTANCE) + PLATFORM_MIN_DISTANCE;
-    // Calcula una altura aleatoria dentro del rango definido
     const height = Math.random() * (PLATFORM_MAX_HEIGHT - PLATFORM_MIN_HEIGHT) + PLATFORM_MIN_HEIGHT;
     
     return {
@@ -117,11 +108,9 @@ const PlatformGame: React.FC<PlatformGameProps> = ({ isOpen, onClose }) => {
       let newVelocityY = prev.velocityY;
       let onPlatform = false;
 
-      // Apply gravity
       newVelocityY += GRAVITY;
       newY += newVelocityY;
 
-      // Check platform collisions
       prev.platforms.forEach(platform => {
         if (checkCollision(newX, newY, platform)) {
           newY = platform.y - PLAYER_SIZE;
@@ -130,17 +119,14 @@ const PlatformGame: React.FC<PlatformGameProps> = ({ isOpen, onClose }) => {
         }
       });
 
-      // Check game over
       if (newY > GAME_HEIGHT) {
         return { ...prev, gameOver: true };
       }
 
-      // Move platforms left and generate new ones
       const newPlatforms = prev.platforms
         .map(platform => ({ ...platform, x: platform.x - 2 }))
-        .filter(platform => platform.x + platform.width > -50); // Permitimos que las plataformas salgan un poco más allá del borde
+        .filter(platform => platform.x + platform.width > -50);
 
-      // Genera nueva plataforma cuando sea necesario
       if (newPlatforms.length < 4) {
         const lastPlatform = newPlatforms[newPlatforms.length - 1];
         newPlatforms.push(generateNewPlatform(lastPlatform.x));
@@ -212,7 +198,7 @@ const PlatformGame: React.FC<PlatformGameProps> = ({ isOpen, onClose }) => {
         <button 
           onClick={onClose} 
           className="absolute top-2 right-2 text-white"
-          style={{ color: "#ffffff" }} // X color set to white
+          style={{ color: "#ffffff" }} 
         >
           ✖
         </button>
@@ -280,10 +266,10 @@ const PlatformGame: React.FC<PlatformGameProps> = ({ isOpen, onClose }) => {
                 <Button 
                   onClick={reset} 
                   style={{
-                    backgroundColor: "#e4a101", // Fondo del botón en color #e4a101
-                    color: "#1b1b1b", // Color del texto en el botón
+                    backgroundColor: "#e4a101", 
+                    color: "#1b1b1b", 
                     border: "2px solid #e4a101",
-                    fontWeight: "bold" // Texto en negrita
+                    fontWeight: "bold"
                   }}
                 >
                   Play Again

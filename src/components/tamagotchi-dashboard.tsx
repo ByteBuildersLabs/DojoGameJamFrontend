@@ -9,7 +9,6 @@ interface TamagotchiDashboardProps {
   openMiniGame: () => void;
 }
 
-// Define the structure of stats with an interface
 interface Stats {
   hunger: number;
   energy: number;
@@ -17,9 +16,7 @@ interface Stats {
   hygiene: number;
 }
 
-// Main component for the Tamagotchi dashboard
 const TamagotchiDashboard: React.FC<TamagotchiDashboardProps> = ({ openMiniGame }) => {
-  // State to hold the stats of the Tamagotchi
   const [stats, setStats] = useState<Stats>({
     hunger: 100,
     energy: 100,
@@ -27,113 +24,100 @@ const TamagotchiDashboard: React.FC<TamagotchiDashboardProps> = ({ openMiniGame 
     hygiene: 100,
   });
 
-  // State to track if the Tamagotchi is alive or not
   const [isAlive, setIsAlive] = useState(true);
-  // State to track the age of the Tamagotchi
   const [age, setAge] = useState(0);
-
-  const [currentImage, setCurrentImage] = useState('/babybeast_happy.gif'); // Default static image path
-
-  // State to control the visibility of the PlatformGame
+  const [currentImage, setCurrentImage] = useState('/babybeast_happy.gif'); 
   const [isPlatformGameOpen, setIsPlatformGameOpen] = useState(false);
 
-  // Decrease stats over time
   useEffect(() => {
-    // Set up an interval that runs every 3 seconds
     const interval = setInterval(() => {
-      // Only decrease stats if the Tamagotchi is alive
       if (isAlive) {
         setStats(prevStats => ({
-          // Each stat decreases at a specific rate, with a minimum value of 0
           hunger: Math.max(0, prevStats.hunger - 2),
           energy: Math.max(0, prevStats.energy - 1.5),
           happiness: Math.max(0, prevStats.happiness - 1),
           hygiene: Math.max(0, prevStats.hygiene - 1),
         }));
         
-        // Increase age over time
         setAge(prevAge => prevAge + 1);
       }
-    }, 3000); // Runs every 3 seconds
+    }, 3000); 
 
-    // Clean up interval on component unmount
     return () => clearInterval(interval);
-  }, [isAlive]); // Re-run effect if isAlive changes
-
-  // Check if Tamagotchi dies
+  }, [isAlive]); 
+  
   useEffect(() => {
-    // If any stat reaches 0, set isAlive to false
+    
     if (Object.values(stats).some(stat => stat === 0)) {
       setIsAlive(false);
+      showDeathAnimation();
     }
-  }, [stats]); // Re-run effect if stats change
+  }, [stats]);
 
   const handleOpenPlatformGame = () => {
-    setIsPlatformGameOpen(true); // Open the game modal
+    setIsPlatformGameOpen(true);
   };
 
   const handleClosePlatformGame = () => {
-    setIsPlatformGameOpen(false); // Close the game modal
+    setIsPlatformGameOpen(false); 
   };
 
-  // Functions to show GIF temporarily
   const showAnimationWithoutTimer = (gifPath: string) => {
-    setCurrentImage(gifPath); // Set GIF image
+    setCurrentImage(gifPath);
   };
 
   const showAnimation = (gifPath: string) => {
-    setCurrentImage(gifPath); // Set GIF image
+    setCurrentImage(gifPath); 
     setTimeout(() => {
-      setCurrentImage('/babybeast_happy.gif'); // Revert to static image after 3 seconds
+      setCurrentImage('/babybeast_happy.gif'); 
     }, 3000);
   };
 
-  // Function to feed the Tamagotchi
+  const showDeathAnimation = () => {
+    setCurrentImage('/dead.gif');
+  };
+
   const feed = () => {
     setStats(prev => ({
       ...prev,
-      hunger: Math.min(100, prev.hunger + 30), // Increases hunger but caps at 100
-      energy: Math.min(100, prev.energy + 10), // Slightly increases energy, capped at 100
+      hunger: Math.min(100, prev.hunger + 30), 
+      energy: Math.min(100, prev.energy + 10), 
     }));
-    showAnimation('/babybeast_eat.gif'); // Replace with the path to your feeding GIF
+    showAnimation('/babybeast_eat.gif');
   };
 
-  // Function to let the Tamagotchi sleep
   const sleep = () => {
     setStats(prev => ({
       ...prev,
-      energy: Math.min(100, prev.energy + 40), // Significantly increases energy, capped at 100
-      happiness: Math.min(100, prev.happiness + 10), // Increases happiness slightly, capped at 100
+      energy: Math.min(100, prev.energy + 40), 
+      happiness: Math.min(100, prev.happiness + 10), 
     }));
-    showAnimationWithoutTimer('/babybeast_sleep.gif'); // Replace with the path to your sleeping GIF
+    showAnimationWithoutTimer('/babybeast_sleep.gif'); 
   };
 
-  // Function to play with the Tamagotchi
   const play = () => {
     setStats(prev => ({
       ...prev,
-      happiness: Math.min(100, prev.happiness + 30), // Boosts happiness, capped at 100
-      energy: Math.max(0, prev.energy - 20), // Decreases energy, with a minimum of 0
-      hunger: Math.max(0, prev.hunger - 10), // Increases hunger slightly, minimum of 0
+      happiness: Math.min(100, prev.happiness + 30), 
+      energy: Math.max(0, prev.energy - 20), 
+      hunger: Math.max(0, prev.hunger - 10), 
     }));
-    showAnimation('/babybeast_play.gif'); // Replace with the path to your playing GIF
+    showAnimation('/babybeast_play.gif');
   };
 
-  // Function to clean the Tamagotchi
   const clean = () => {
     setStats(prev => ({
       ...prev,
-      hygiene: Math.min(100, prev.hygiene + 40), // Increases hygiene, capped at 100
-      happiness: Math.min(100, prev.happiness + 10), // Slightly increases happiness, capped at 100
+      hygiene: Math.min(100, prev.hygiene + 40), 
+      happiness: Math.min(100, prev.happiness + 10), 
     }));
-    showAnimation('/babybeast_shower.gif'); // Replace with the path to your cleaning GIF
+    showAnimation('/babybeast_shower.gif'); 
   };
 
   const wakeUp = () => {
-    setCurrentImage('/babybeast_happy.gif'); // Set back to the default image
+    setCurrentImage('/babybeast_happy.gif'); 
   };
 
-  // Function to restart the game when Tamagotchi dies
   const restart = () => {
     setStats({
       hunger: 100,
@@ -143,7 +127,7 @@ const TamagotchiDashboard: React.FC<TamagotchiDashboardProps> = ({ openMiniGame 
     });
     setIsAlive(true);
     setAge(0); // Resets age
-    setCurrentImage('/babybeast_happy.gif'); // Reset to original image
+    setCurrentImage('/babybeast_happy.gif'); 
   };
 
   return (
@@ -201,55 +185,90 @@ const TamagotchiDashboard: React.FC<TamagotchiDashboardProps> = ({ openMiniGame 
               <Button 
                 onClick={feed} 
                 disabled={!isAlive}
-                className="flex items-center gap-2 bg-[#370001] border-[#e4a101] border-2 hover:bg-[#4a0001]"
+                className="flex items-center gap-2 bg-[#370001] text-white border-[#e4a101] border-2 hover:bg-[#4a0001]"
+                style={{
+                  backgroundColor: "#370001",
+                  borderColor: "#e4a101",
+                  borderWidth: "2px"
+                }}
               >
                 <Pizza className="w-4 h-4" /> Feed
               </Button>
               <Button 
                 onClick={sleep} 
                 disabled={!isAlive}
-                className="flex items-center gap-2 bg-[#370001] border-[#e4a101] border-2 hover:bg-[#4a0001]"
+                className="flex items-center gap-2 bg-[#370001] text-white border-[#e4a101] border-2 hover:bg-[#4a0001]"
+                style={{
+                  backgroundColor: "#370001",
+                  borderColor: "#e4a101",
+                  borderWidth: "2px"
+                }}
               >
                 <Coffee className="w-4 h-4" /> Sleep
               </Button>
               <Button 
                 onClick={play} 
                 disabled={!isAlive}
-                className="flex items-center gap-2 bg-[#370001] border-[#e4a101] border-2 hover:bg-[#4a0001]"
+                className="flex items-center gap-2 bg-[#370001] text-white border-[#e4a101] border-2 hover:bg-[#4a0001]"
+                style={{
+                  backgroundColor: "#370001",
+                  borderColor: "#e4a101",
+                  borderWidth: "2px"
+                }}
               >
                 <Gamepad2 className="w-4 h-4" /> Play
               </Button>
               <Button 
                 onClick={clean} 
                 disabled={!isAlive}
-                className="flex items-center gap-2 bg-[#370001] border-[#e4a101] border-2 hover:bg-[#4a0001]"
+                className="flex items-center gap-2 bg-[#370001] text-white border-[#e4a101] border-2 hover:bg-[#4a0001]"
+                style={{
+                  backgroundColor: "#370001",
+                  borderColor: "#e4a101",
+                  borderWidth: "2px"
+                }}
               >
                 <Bath className="w-4 h-4" /> Clean
               </Button>
-  
+
               <Button 
                 onClick={wakeUp} 
                 disabled={!isAlive} 
-                className="flex items-center gap-2 bg-[#370001] border-[#e4a101] border-2 hover:bg-[#4a0001]"
+                className="flex items-center gap-2 bg-[#370001] text-white border-[#e4a101] border-2 hover:bg-[#4a0001]"
+                style={{
+                  backgroundColor: "#370001",
+                  borderColor: "#e4a101",
+                  borderWidth: "2px"
+                }}
               >
                 <Sun className="w-4 h-4" /> Wake Up
               </Button>
-  
+
               {/* New Button to Open Platform Game */}
               <Button 
                 onClick={openMiniGame} 
-                className="flex items-center gap-2 bg-[#370001] border-[#e4a101] border-2 hover:bg-[#4a0001]" 
+                className="flex items-center gap-2 bg-[#370001] text-white border-[#e4a101] border-2 hover:bg-[#4a0001]" 
                 disabled={!isAlive}
+                style={{
+                  backgroundColor: "#370001",
+                  borderColor: "#e4a101",
+                  borderWidth: "2px"
+                }}
               >
                 <Gamepad className="w-4 h-4" /> Mini Game
               </Button>
             </div>
-  
+
             {/* Restart Button, appears when Tamagotchi is dead */}
             {!isAlive && (
               <Button 
                 onClick={restart}
-                className="w-full mt-4 bg-[#e4a101] border-[#370001] border-2 hover:bg-[#f5b112] text-[#370001] font-bold"
+                className="w-full mt-4 bg-[#370001] text-[#e4a101] border-[#e4a101] border-2 hover:bg-[#4a0001] font-bold"
+                style={{
+                  backgroundColor: "#370001",
+                  borderColor: "#e4a101",
+                  borderWidth: "2px"
+                }}
               >
                 Restart Game
               </Button>
