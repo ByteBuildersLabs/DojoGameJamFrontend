@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Progress } from './ui/progress';
 import { Button } from './ui/button';
-import { Heart, Pizza, Coffee, Bath, Gamepad2, Sun } from 'lucide-react';
+import PlatformGame from './mini-game';
+import { Heart, Pizza, Coffee, Bath, Gamepad2, Sun, Gamepad} from 'lucide-react';
+
+interface TamagotchiDashboardProps {
+  openMiniGame: () => void;
+}
 
 // Define the structure of stats with an interface
 interface Stats {
@@ -13,7 +18,7 @@ interface Stats {
 }
 
 // Main component for the Tamagotchi dashboard
-const TamagotchiDashboard = () => {
+const TamagotchiDashboard: React.FC<TamagotchiDashboardProps> = ({ openMiniGame }) => {
   // State to hold the stats of the Tamagotchi
   const [stats, setStats] = useState<Stats>({
     hunger: 100,
@@ -28,6 +33,9 @@ const TamagotchiDashboard = () => {
   const [age, setAge] = useState(0);
 
   const [currentImage, setCurrentImage] = useState('/babybeast_happy.gif'); // Default static image path
+
+  // State to control the visibility of the PlatformGame
+  const [isPlatformGameOpen, setIsPlatformGameOpen] = useState(false);
 
   // Decrease stats over time
   useEffect(() => {
@@ -59,6 +67,14 @@ const TamagotchiDashboard = () => {
       setIsAlive(false);
     }
   }, [stats]); // Re-run effect if stats change
+
+  const handleOpenPlatformGame = () => {
+    setIsPlatformGameOpen(true); // Open the game modal
+  };
+
+  const handleClosePlatformGame = () => {
+    setIsPlatformGameOpen(false); // Close the game modal
+  };
 
   // Functions to show GIF temporarily
   const showAnimationWithoutTimer = (gifPath: string) => {
@@ -116,7 +132,6 @@ const TamagotchiDashboard = () => {
   const wakeUp = () => {
     setCurrentImage('/babybeast_happy.gif'); // Set back to the default image
   };
-  
 
   // Function to restart the game when Tamagotchi dies
   const restart = () => {
@@ -136,18 +151,18 @@ const TamagotchiDashboard = () => {
       <Card>
         <CardHeader>
           <CardTitle className="text-center text-white">
-              {isAlive ? (
-            <>
-              <span style={{ color: '#e4a101' }}>BABYBEAST</span>: {Math.floor(age / 20)} days
-            </>
-          ) : (
-            '☠️ GAME OVER'
-          )}
+            {isAlive ? (
+              <>
+                <span style={{ color: '#e4a101' }}>BABYBEAST</span>: {Math.floor(age / 20)} days
+              </>
+            ) : (
+              '☠️ GAME OVER'
+            )}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-
+  
             {/* Centered Tamagotchi Image */}
             <div className="flex justify-center mb-4">
               <img src={currentImage} alt="Tamagotchi" className="w-40 h-40" />
@@ -159,28 +174,28 @@ const TamagotchiDashboard = () => {
               <Progress value={stats.hunger} />
               <span className="w-12 text-right font-medium text-white">{Math.round(stats.hunger)}%</span>
             </div>
-
+  
             {/* Energy Bar */}
             <div className="flex items-center gap-2 mb-2">
               <Coffee className="text-yellow-600" />
               <Progress value={stats.energy} />
               <span className="w-12 text-right font-medium text-white">{Math.round(stats.energy)}%</span>
             </div>
-
+  
             {/* Happiness Bar */}
             <div className="flex items-center gap-2 mb-2">
               <Gamepad2 className="text-green-500" />
               <Progress value={stats.happiness} />
               <span className="w-12 text-right font-medium text-white">{Math.round(stats.happiness)}%</span>
             </div>
-
+  
             {/* Hygiene Bar */}
             <div className="flex items-center gap-2 mb-2">
               <Bath className="text-blue-500" />
               <Progress value={stats.hygiene} />
               <span className="w-12 text-right font-medium text-white">{Math.round(stats.hygiene)}%</span>
             </div>
-
+  
             {/* Action Buttons */}
             <div className="grid grid-cols-2 gap-4 mt-6">
               <Button 
@@ -211,7 +226,7 @@ const TamagotchiDashboard = () => {
               >
                 <Bath className="w-4 h-4" /> Clean
               </Button>
-
+  
               <Button 
                 onClick={wakeUp} 
                 disabled={!isAlive} 
@@ -219,9 +234,13 @@ const TamagotchiDashboard = () => {
               >
                 <Sun className="w-4 h-4" /> Wake Up
               </Button>
-
+  
+              {/* New Button to Open Platform Game */}
+              <Button onClick={openMiniGame} className="flex items-center gap-2" disabled={!isAlive}>
+                <Gamepad className="w-4 h-4" /> Mini Game
+              </Button>
             </div>
-
+  
             {/* Restart Button, appears when Tamagotchi is dead */}
             {!isAlive && (
               <Button 
@@ -234,8 +253,18 @@ const TamagotchiDashboard = () => {
           </div>
         </CardContent>
       </Card>
+  
+      {/* Modal for Platform Game */}
+      {isPlatformGameOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-4 rounded-lg max-w-xl w-full relative">
+            <PlatformGame isOpen={isPlatformGameOpen} onClose={handleClosePlatformGame} /> {/* Pasamos las props necesarias */}
+          </div>
+        </div>
+      )}
     </div>
   );
+  
 };
 
 export default TamagotchiDashboard;
